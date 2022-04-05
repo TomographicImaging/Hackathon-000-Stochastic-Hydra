@@ -1,0 +1,11 @@
+hydra: 
+  run:
+    dir: ISTA/${functional_1.name}/${functional_2.name}
+  sweep:
+    dir: ISTA/${functional_1.name}/${functional_2.name}/${Hyperparameters.N}
+
+
+defaults:
+  - dataset: dataset_test
+  - functional_1: gd
+  - functional_2: indicator_func
