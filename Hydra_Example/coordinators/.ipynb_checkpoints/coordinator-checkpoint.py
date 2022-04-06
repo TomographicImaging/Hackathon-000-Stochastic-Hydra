@@ -25,21 +25,22 @@ def main(cfg: DictConfig) -> None:
     print(OmegaConf.to_yaml(cfg))
 
 
-
+    # l object = r class(init: cfg)
     dataset = Dataset(cfg)
     acquisition_model = AcquisitionModel(cfg)
     warm_start_image = WarmStartImage(cfg)
     ground_truth = GroundTruth(cfg)
     
-    QualityMetrics = QualityMetricsFactory(cfg)
-    Functionals = FunctionalsFactory(cfg)
-    Algorithm = AlgorithmFactory(cfg)
+    # l object (pointing to classes) = r factory for classes
+    qualitymetricsfactory = QualityMetricsFactories(cfg)
+    functionalsfactory = FunctionalsFactories(cfg)
+    algorithmfactory = AlgorithmFactories(cfg)
     
     
     set_up_acquisition_model_with_data(acquisition_model, dataset)
-    functionals = Functionals(acquisition_model, dataset)
-    quality_metrics = QualityMetrics(groundtruth)
-    algorithm = Algorithm(functionals,acquisition_model,quality_metrics, warm_start_image)
+    functionals = functionalsfactory(acquisition_model, dataset)
+    quality_metrics = qualitymetricsfactory(groundtruth)
+    algorithm = algorithmfactory(functionals, acquisition_model, quality_metrics, warm_start_image)
     
     algorithm.run()
 
