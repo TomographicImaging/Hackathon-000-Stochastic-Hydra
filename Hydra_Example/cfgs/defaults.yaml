@@ -1,0 +1,9 @@
+hydra: 
+  run:
+    dir: ${modality.name}/${modality.algorithm.name}
+  sweep:
+    dir: ISTA/${functional_1.name}/${functional_2.name}/${Hyperparameters.N}
+
+
+defaults:
+  - modality: pet

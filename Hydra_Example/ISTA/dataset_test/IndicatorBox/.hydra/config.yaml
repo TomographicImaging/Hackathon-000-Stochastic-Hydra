@@ -1,9 +1,0 @@
-dataset:
-  name: dataset_test
-  _target_: src.dataset.dataset_test.dataset_test
-functional_1:
-  name: dataset_test
-  _target_: src.functional_1.gd.gd
-functional_2:
-  name: IndicatorBox
-  _target_: src.functional_2.indicator_func.indicator_func
