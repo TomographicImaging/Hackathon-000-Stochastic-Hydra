@@ -35,7 +35,7 @@ except Exception: # this command not being found can raise quite a few different
     device = 'cpu'
     print('No Nvidia GPU in system!')
     
-#from utils import set_up_acquisition_model_with_data
+from utils import set_up_acquisition_model_with_data
 
 
 
@@ -60,9 +60,9 @@ def main(cfg: DictConfig) -> None:
     set_up_acquisition_model_with_data(acquisition_model, dataset)
     datafit = datafitfactory(dataset,acquisition_model)
     quality_metrics = qualitymetricsfactory(groundtruth)
-    algorithm = algorithmfactory(functionals, acquisition_model, quality_metrics, warm_start_image)
+    algorithm = algorithmfactory(dataset, datafit, prior, acquisition_model, quality_metrics, warm_start_image)
     
-    algorithm.run()
+    algorithm.algorithm.run()
 
 
 if __name__ == "__main__":

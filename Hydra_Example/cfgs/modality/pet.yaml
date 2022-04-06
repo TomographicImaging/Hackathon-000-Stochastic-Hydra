@@ -18,9 +18,10 @@ functionals:
     prior:
         name: "NonNeg"
 algorithm:
-    name: "SGD"
+    name: "GD"
     preconditioning: False
-    num_epochs: 100
+    stepsize: 0.1
+    num_epochs: 10
     hyperparameters:
         x: 1
         y: 1
