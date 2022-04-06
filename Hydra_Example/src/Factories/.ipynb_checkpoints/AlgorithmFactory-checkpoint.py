@@ -23,13 +23,16 @@ from ccpi.filters import
 
 cil_path = '/home/jovyan/Hackathon-000-Stochastic-Algorithms/cil/'
 sys.path.append(cil_path)
+from NewFISTA import ISTA
 
 class AlgorithmFactory(object):
     def __init__(self,cfg):
         self.cfg=cfg        
                 
-    def set_up(self,dataset,acquisition_model):
-        if self.cfg.acq_model.num_subsets == 1 and self.cfg.functionals.datafit.KL:
-            f = KullbackLeibler(b=dataset.acq_data, eta=dataset.additive_factor)
-            self.datafit = OperatorCompositionFunction(f,acquisition_model)
+    def set_up(self, data, datafit, prior, acquisition_model, quality_metrics, warm_start_image):
+        if self.cfg.acq_model.num_subsets == 1 and self.cfg.algorithm.name == "GD":
+            initial = dataset.image_template.get_uniform_copy(0)
+            stepsize = self.cfg.algorithm.stepsize
+            self.algorithm = ISTA(initial=initial, f=datafit.datafit, g=prior,
+                            step_size=step_size, max_iteration=1e10, check_convergence_criterion=False)
         
