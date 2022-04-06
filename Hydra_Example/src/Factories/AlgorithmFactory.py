@@ -24,24 +24,12 @@ from ccpi.filters import
 cil_path = '/home/jovyan/Hackathon-000-Stochastic-Algorithms/cil/'
 sys.path.append(cil_path)
 
-from sirf.Utilities import examples_data_path
-
-class Dataset(object):
+class AlgorithmFactory(object):
     def __init__(self,cfg):
-        self.cfg=cfg
+        self.cfg=cfg        
+                
+    def set_up(self,dataset,acquisition_model):
+        if self.cfg.acq_model.num_subsets == 1 and self.cfg.functionals.datafit.KL:
+            f = KullbackLeibler(b=dataset.acq_data, eta=dataset.additive_factor)
+            self.datafit = OperatorCompositionFunction(f,acquisition_model)
         
-        if cfg.dataset.name = 'test':
-            self.acq_data = pet.ImageData('{}/{}/{}'.format(
-                examples_data_path("PET"),
-                'thorax_single_slice',
-                'emission.hv')
-            self.multiplicative_factor = pet.ImageData('{}/{}/{}'.format(
-                examples_data_path("PET"),
-                'thorax_single_slice',
-                'attenuation.hv')
-            self.additive_factor = self.acq_data.clone()
-            self.additive_factor.fill(0.01*self.acq_data.to_numpy())
-                                                       
-        self.image_template = self.acq_data.create_uniform_image(0.0)
-                                    
-            

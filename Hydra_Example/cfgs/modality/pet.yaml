@@ -15,11 +15,11 @@ quality_metric:
 functionals:
     datafit:
         KL: True
-    functional:
+    prior:
         name: "NonNeg"
 algorithm:
     name: "SGD"
-    preconditioning: True
+    preconditioning: False
     num_epochs: 100
     hyperparameters:
         x: 1
