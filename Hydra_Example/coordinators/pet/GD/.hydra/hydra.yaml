@@ -124,12 +124,12 @@ hydra:
         exclude_keys: []
   runtime:
     version: 1.1.1
-    cwd: /home/jovyan/Hackathon/Hackathon-000-Stochastic-Hydra/Hydra_Example/coordinators
+    cwd: /home/jovyan/Hackathon-000-Stochastic-Hydra/Hydra_Example/coordinators
     config_sources:
     - path: hydra.conf
       schema: pkg
       provider: hydra
-    - path: /home/jovyan/Hackathon/Hackathon-000-Stochastic-Hydra/Hydra_Example/cfgs
+    - path: /home/jovyan/Hackathon-000-Stochastic-Hydra/Hydra_Example/cfgs
       schema: file
       provider: main
     - path: ''

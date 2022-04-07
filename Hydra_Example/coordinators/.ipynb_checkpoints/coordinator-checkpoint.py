@@ -25,10 +25,9 @@ from cil.plugins.ccpi_regularisation.functions import FGP_TV
 cil_path = '/home/jovyan/Hackathon-000-Stochastic-Algorithms/cil/'
 sys.path.append(cil_path)
 
-source_path = '/home/jovyan/Hackathon/Hackathon-000-Stochastic-Hydra/Hydra_Example/src'
+source_path = '/home/jovyan/Hackathon-000-Stochastic-Hydra/Hydra_Example/src'
 sys.path.append(source_path)
 
-print(sys.path)
 
 from Classes.Dataset import Dataset
 from Classes.AcquisitionModel import AcquisitionModel

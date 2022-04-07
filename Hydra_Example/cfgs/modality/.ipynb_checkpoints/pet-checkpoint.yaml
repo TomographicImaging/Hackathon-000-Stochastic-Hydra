@@ -20,7 +20,7 @@ functionals:
 algorithm:
     name: "GD"
     preconditioning: False
-    stepsize: 0.1
+    stepsize: 0.01
     num_epochs: 10
     hyperparameters:
         x: 1
