@@ -28,6 +28,8 @@ sys.path.append(cil_path)
 source_path = '/home/jovyan/Hackathon/Hackathon-000-Stochastic-Hydra/Hydra_Example/src'
 sys.path.append(source_path)
 
+print(sys.path)
+
 from Classes.Dataset import Dataset
 from Classes.AcquisitionModel import AcquisitionModel
 from Classes.Prior import Prior
@@ -81,6 +83,8 @@ def main(cfg: DictConfig) -> None:
     algorithmfactory.set_up_algorithm(dataset, datafitfactory, prior, acquisition_model, quality_metrics=None, warm_start_image=None)
     
     algorithmfactory.algorithm.run(10)
+    where_to_save = '/home/jovyan/Hackathon/Hackathon-000-Stochastic-Hydra/Hydra_Example/results'
+    algorithmfactory.save_solution(where_to_save)
 
 
 if __name__ == "__main__":
