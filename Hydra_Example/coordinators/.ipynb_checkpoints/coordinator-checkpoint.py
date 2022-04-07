@@ -1,3 +1,4 @@
+import omegaconf
 from omegaconf import DictConfig, OmegaConf
 import hydra
 
@@ -19,11 +20,27 @@ from cil.optimisation.functions import \
 from cil.optimisation.operators import \
     CompositionOperator, BlockOperator, LinearOperator, GradientOperator, ScaledOperator
 from cil.plugins.ccpi_regularisation.functions import FGP_TV
-from ccpi.filters import 
+
 
 cil_path = '/home/jovyan/Hackathon-000-Stochastic-Algorithms/cil/'
 sys.path.append(cil_path)
 
+source_path = '/home/jovyan/Hackathon/Hackathon-000-Stochastic-Hydra/Hydra_Example/src'
+sys.path.append(source_path)
+
+from Classes.Dataset import Dataset
+from Classes.AcquisitionModel import AcquisitionModel
+from Classes.Prior import Prior
+from Factories.DataFitFactory import DataFitFactory
+from Factories.AlgorithmFactory import AlgorithmFactory
+
+# utils_path = '/home/jovyan/Hackathon/Hackathon-000-Stochastic-Hydra/Hydra_Example/src/utils.py'
+# runpy.run_path(utils_path)
+# import utils
+# from utils import set_up_acquisition_model_with_data
+def set_up_acquisition_model_with_data(acquisition_model, dataset):
+    # acquisition_model.set_acquisition_sensitivity(dataset.multiplicative_factor)
+    acquisition_model.set_up(dataset.acq_data, dataset.image_template)  
 
 import subprocess
 
@@ -35,7 +52,7 @@ except Exception: # this command not being found can raise quite a few different
     device = 'cpu'
     print('No Nvidia GPU in system!')
     
-from utils import set_up_acquisition_model_with_data
+
 
 
 
@@ -46,23 +63,24 @@ def main(cfg: DictConfig) -> None:
 
     # l object = r class(init: cfg)
     dataset = Dataset(cfg)
-    acquisition_model = AcquisitionModel(cfg)
-    warm_start_image = WarmStartImage(cfg)
-    ground_truth = GroundTruth(cfg)
+    acquisition_model = AcquisitionModel(cfg).acquisition_model
+    # warm_start_image = WarmStartImage(cfg)
+    # ground_truth = GroundTruth(cfg)
     prior = Prior(cfg)
     
     # l object (pointing to classes) = r factory for classes
     datafitfactory = DataFitFactory(cfg)
     algorithmfactory = AlgorithmFactory(cfg)
-    qualitymetricsfactory = QualityMetricsFactory(cfg)
+    # qualitymetricsfactory = QualityMetricsFactory(cfg)
     
     
     set_up_acquisition_model_with_data(acquisition_model, dataset)
-    datafit = datafitfactory(dataset,acquisition_model)
-    quality_metrics = qualitymetricsfactory(groundtruth)
-    algorithm = algorithmfactory(dataset, datafit, prior, acquisition_model, quality_metrics, warm_start_image)
+    datafitfactory.set_up_data_fit(dataset,acquisition_model)
+    # quality_metrics = qualitymetricsfactory(groundtruth)
+    # algorithm = algorithmfactory(dataset, datafit, prior, acquisition_model, quality_metrics, warm_start_image)
+    algorithmfactory.set_up_algorithm(dataset, datafitfactory, prior, acquisition_model, quality_metrics=None, warm_start_image=None)
     
-    algorithm.algorithm.run()
+    algorithmfactory.algorithm.run(10)
 
 
 if __name__ == "__main__":

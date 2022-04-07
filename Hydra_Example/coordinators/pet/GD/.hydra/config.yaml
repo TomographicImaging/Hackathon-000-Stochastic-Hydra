@@ -1,0 +1,29 @@
+modality:
+  name: pet
+  dataset:
+    name: test
+  acq_model:
+    LOR: 2
+    num_subsets: 1
+  warm_start:
+    name: None
+  ground_truth:
+    name: None
+  quality_metric:
+    obj_func: true
+    mse: false
+    roi: true
+  functionals:
+    datafit:
+      KL: true
+    prior:
+      name: NonNeg
+  algorithm:
+    name: GD
+    preconditioning: false
+    stepsize: 0.1
+    num_epochs: 10
+    hyperparameters:
+      x: 1
+      'y': 1
+      z: 1
