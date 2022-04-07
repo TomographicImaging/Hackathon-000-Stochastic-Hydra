@@ -24,7 +24,7 @@ from cil.plugins.ccpi_regularisation.functions import FGP_TV
 
 cil_path = '/home/jovyan/Hackathon-000-Stochastic-Algorithms/cil/'
 sys.path.append(cil_path)
-from NewFISTA import ISTA
+from NewFISTA import ISTA, FISTA
 
 class AlgorithmFactory(object):
     def __init__(self,cfg):

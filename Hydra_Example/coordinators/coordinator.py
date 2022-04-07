@@ -82,7 +82,7 @@ def main(cfg: DictConfig) -> None:
     algorithmfactory.set_up_algorithm(dataset, datafitfactory, prior, acquisition_model, quality_metrics=None, warm_start_image=None)
     
     algorithmfactory.algorithm.run(10)
-    where_to_save = '/home/jovyan/Hackathon/Hackathon-000-Stochastic-Hydra/Hydra_Example/results'
+    where_to_save = '/home/jovyan/Hackathon-000-Stochastic-Hydra/Hydra_Example/results'
     algorithmfactory.save_solution(where_to_save)
 
 

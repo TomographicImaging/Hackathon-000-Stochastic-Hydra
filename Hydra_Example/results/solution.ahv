@@ -1,5 +1,5 @@
 !INTERFILE  :=
-!name of data file := /home/jovyan/Hackathon/Hackathon-000-Stochastic-Hydra/Hydra_Example/results/solution.v
+!name of data file := /home/jovyan/Hackathon-000-Stochastic-Hydra/Hydra_Example/results/solution.v
 !total number of images := 1
 !data offset in bytes := 0
 !imagedata byte order := LITTLEENDIAN
