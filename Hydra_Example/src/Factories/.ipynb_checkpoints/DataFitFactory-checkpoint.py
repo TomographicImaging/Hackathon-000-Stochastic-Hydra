@@ -18,7 +18,7 @@ from cil.optimisation.functions import KullbackLeibler, OperatorCompositionFunct
 from cil.optimisation.operators import \
     CompositionOperator, BlockOperator, LinearOperator, GradientOperator, ScaledOperator
 from cil.plugins.ccpi_regularisation.functions import FGP_TV
-from ccpi.filters import 
+
 
 cil_path = '/home/jovyan/Hackathon-000-Stochastic-Algorithms/cil/'
 sys.path.append(cil_path)
@@ -27,8 +27,8 @@ class DataFitFactory(object):
     def __init__(self,cfg):
         self.cfg=cfg
                 
-    def set_up(self,dataset,acquisition_model):
-        if self.cfg.acq_model.num_subsets == 1 and self.cfg.functionals.datafit.KL:
+    def set_up_data_fit(self,dataset,acquisition_model):
+        if self.cfg.modality.acq_model.num_subsets == 1 and self.cfg.modality.functionals.datafit.KL:
             f = KullbackLeibler(b=dataset.acq_data, eta=dataset.additive_factor)
             self.datafit = OperatorCompositionFunction(f,acquisition_model)
         

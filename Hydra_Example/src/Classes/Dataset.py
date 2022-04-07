@@ -19,7 +19,7 @@ from cil.optimisation.functions import \
 from cil.optimisation.operators import \
     CompositionOperator, BlockOperator, LinearOperator, GradientOperator, ScaledOperator
 from cil.plugins.ccpi_regularisation.functions import FGP_TV
-from ccpi.filters import 
+
 
 cil_path = '/home/jovyan/Hackathon-000-Stochastic-Algorithms/cil/'
 sys.path.append(cil_path)
@@ -30,17 +30,23 @@ class Dataset(object):
     def __init__(self,cfg):
         self.cfg=cfg
         
-        if cfg.dataset.name = 'test':
-            self.acq_data = pet.ImageData('{}/{}/{}'.format(
+        if cfg.modality.dataset.name == 'test':
+            gt = pet.ImageData('{}/{}/{}'.format(
                 examples_data_path("PET"),
                 'thorax_single_slice',
-                'emission.hv')
-            self.multiplicative_factor = pet.ImageData('{}/{}/{}'.format(
+                'emission.hv'))
+            attn_img = pet.ImageData('{}/{}/{}'.format(
                 examples_data_path("PET"),
                 'thorax_single_slice',
-                'attenuation.hv')
+                'attenuation.hv'))
+            data_path = os.path.join(examples_data_path('PET'), 'thorax_single_slice')
+            acq_model = pet.AcquisitionModelUsingRayTracingMatrix()
+            template = pet.AcquisitionData(os.path.join(data_path, 'template_sinogram.hs'))
+            acq_model.set_up(template, gt)
+            self.acq_data = acq_model.forward(gt)
+            self.multiplicative_factor = self.acq_data.clone().fill(1.0)
             self.additive_factor = self.acq_data.clone()
-            self.additive_factor.fill(0.01*self.acq_data.to_numpy())
+            self.additive_factor.fill(0.01)
                                                        
         self.image_template = self.acq_data.create_uniform_image(0.0)
                                     

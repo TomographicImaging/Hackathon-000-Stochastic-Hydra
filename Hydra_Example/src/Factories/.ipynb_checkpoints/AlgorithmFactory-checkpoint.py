@@ -19,7 +19,7 @@ from cil.optimisation.functions import \
 from cil.optimisation.operators import \
     CompositionOperator, BlockOperator, LinearOperator, GradientOperator, ScaledOperator
 from cil.plugins.ccpi_regularisation.functions import FGP_TV
-from ccpi.filters import 
+
 
 cil_path = '/home/jovyan/Hackathon-000-Stochastic-Algorithms/cil/'
 sys.path.append(cil_path)
@@ -29,10 +29,11 @@ class AlgorithmFactory(object):
     def __init__(self,cfg):
         self.cfg=cfg        
                 
-    def set_up(self, data, datafit, prior, acquisition_model, quality_metrics, warm_start_image):
-        if self.cfg.acq_model.num_subsets == 1 and self.cfg.algorithm.name == "GD":
+    # def set_up_algorithm(self, dataset, datafit, prior, acquisition_model, quality_metrics, warm_start_image):
+    def set_up_algorithm(self, dataset, datafit, prior, acquisition_model, quality_metrics, warm_start_image):
+        if self.cfg.modality.acq_model.num_subsets == 1 and self.cfg.modality.algorithm.name == "GD":
             initial = dataset.image_template.get_uniform_copy(0)
-            stepsize = self.cfg.algorithm.stepsize
-            self.algorithm = ISTA(initial=initial, f=datafit.datafit, g=prior,
-                            step_size=step_size, max_iteration=1e10, check_convergence_criterion=False)
+            step_size = self.cfg.modality.algorithm.stepsize
+            self.algorithm = ISTA(initial=initial, f=datafit.datafit, g=prior.prior,
+                step_size=step_size, max_iteration=1e10,check_convergence_criterion=False)
         

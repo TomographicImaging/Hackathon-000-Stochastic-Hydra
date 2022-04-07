@@ -19,7 +19,7 @@ from cil.optimisation.functions import \
 from cil.optimisation.operators import \
     CompositionOperator, BlockOperator, LinearOperator, GradientOperator, ScaledOperator
 from cil.plugins.ccpi_regularisation.functions import FGP_TV
-from ccpi.filters import 
+
 
 cil_path = '/home/jovyan/Hackathon-000-Stochastic-Algorithms/cil/'
 sys.path.append(cil_path)
@@ -28,5 +28,5 @@ class Prior(object):
     def __init__(self,cfg):
         self.cfg=cfg
     
-        if self.cfg.functionals.prior.name == "NonNeg"
+        if self.cfg.modality.functionals.prior.name == "NonNeg":
                 self.prior = IndicatorBox(lower=0)
