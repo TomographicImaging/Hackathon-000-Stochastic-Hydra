@@ -31,5 +31,19 @@ class DataFitFactory(object):
         if self.cfg.modality.acq_model.num_subsets == 1 and self.cfg.modality.functionals.datafit.KL:
             f = KullbackLeibler(b=dataset.acq_data, eta=dataset.additive_factor)
             self.datafit = OperatorCompositionFunction(f,acquisition_model)
+            
+            
+            
+## 
+
+
+# datafitfactory = DataFitFactory(cfg)
+# datafit = datafitfactory(dataset)
+
+# class DataFitFactory(object):
+#     def __init__(self,cfg):
+#         self.cfg=cfg
+# 	def __call__(self, dataset):
+#         return KullbackLeibler(bla)
         
                 
