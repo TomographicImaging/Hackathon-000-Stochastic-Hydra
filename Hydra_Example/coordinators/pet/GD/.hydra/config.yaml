@@ -2,13 +2,13 @@ modality:
   name: pet
   dataset:
     name: test
+    warm_start:
+      name: None
+    ground_truth:
+      name: None
   acq_model:
     LOR: 2
     num_subsets: 1
-  warm_start:
-    name: None
-  ground_truth:
-    name: None
   quality_metric:
     obj_func: true
     mse: false

@@ -25,13 +25,15 @@ from cil.plugins.ccpi_regularisation.functions import FGP_TV
 cil_path = '/home/jovyan/Hackathon-000-Stochastic-Algorithms/cil/'
 sys.path.append(cil_path)
 
-source_path = '/home/jovyan/Hackathon-000-Stochastic-Hydra/Hydra_Example/src'
+source_path = '/home/jovyan/Hackathon-000-Stochastic-Hydra/Hydra_Example/src/'
 sys.path.append(source_path)
 
+print(sys.path)
 
 from Classes.Dataset import Dataset
 from Classes.AcquisitionModel import AcquisitionModel
 from Classes.Prior import Prior
+from Classes.QualityMetrics import QualityMetrics
 from Factories.DataFitFactory import DataFitFactory
 from Factories.AlgorithmFactory import AlgorithmFactory
 
@@ -52,10 +54,6 @@ try:
 except Exception: # this command not being found can raise quite a few different errors depending on the configuration
     device = 'cpu'
     print('No Nvidia GPU in system!')
-    
-
-
-
 
 @hydra.main(config_path="../cfgs", config_name="defaults")
 def main(cfg: DictConfig) -> None:
@@ -72,18 +70,16 @@ def main(cfg: DictConfig) -> None:
     # l object (pointing to classes) = r factory for classes
     datafitfactory = DataFitFactory(cfg)
     algorithmfactory = AlgorithmFactory(cfg)
-    # qualitymetricsfactory = QualityMetricsFactory(cfg)
+    #qualitymetricsfactory = QualityMetricsFactory(cfg)
     
     
     set_up_acquisition_model_with_data(acquisition_model, dataset)
     datafitfactory.set_up_data_fit(dataset,acquisition_model)
-    # quality_metrics = qualitymetricsfactory(groundtruth)
+    quality_metrics = QualityMetrics(cfg,reference_image=dataset.groundtruth)
     # algorithm = algorithmfactory(dataset, datafit, prior, acquisition_model, quality_metrics, warm_start_image)
-    algorithmfactory.set_up_algorithm(dataset, datafitfactory, prior, acquisition_model, quality_metrics=None, warm_start_image=None)
+    algorithmfactory.set_up_algorithm(dataset, datafitfactory, prior, acquisition_model, quality_metrics=quality_metrics, warm_start_image=None)
     
-    algorithmfactory.algorithm.run(10)
-    where_to_save = '/home/jovyan/Hackathon-000-Stochastic-Hydra/Hydra_Example/results'
-    algorithmfactory.save_solution(where_to_save)
+    algorithmfactory.algorithm.run(10,callback=quality_metrics.callback.eval)
 
 
 if __name__ == "__main__":

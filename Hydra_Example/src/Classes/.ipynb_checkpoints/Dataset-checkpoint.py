@@ -39,15 +39,17 @@ class Dataset(object):
                 examples_data_path("PET"),
                 'thorax_single_slice',
                 'attenuation.hv'))
-            data_path = os.path.join(examples_data_path('PET'), 'thorax_single_slice')
             acq_model = pet.AcquisitionModelUsingRayTracingMatrix()
-            template = pet.AcquisitionData(os.path.join(data_path, 'template_sinogram.hs'))
-            acq_model.set_up(template, gt)
+            data_template = pet.AcquisitionData('{}/{}/{}'.format(
+                examples_data_path("PET"),
+                'thorax_single_slice',
+                'template_sinogram.hs'))            
+            acq_model.set_up(data_template, gt)
             self.acq_data = acq_model.forward(gt)
             self.multiplicative_factor = self.acq_data.clone().fill(1.0)
             self.additive_factor = self.acq_data.clone()
             self.additive_factor.fill(0.01)
-                                                       
-        self.image_template = self.acq_data.create_uniform_image(0.0)
+            self.groundtruth = gt                                                       
+            self.image_template = self.groundtruth.clone().fill(1.0)
                                     
             

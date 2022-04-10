@@ -5,12 +5,13 @@ import numpy as np
 import cil
 import tensorboardX
 from ImageQualityCallback import MSE, MAE, PSNR, ImageQualityCallback
+from scipy.ndimage import binary_dilation
 
 class QualityMetrics(object):
     def __init__(self, cfg, reference_image = None, roi_mask = None):
         # threshold the numpy array behind the image
 
-        image = reference_image.get_uniform_copy(0.0)
+        image = reference_image
         image_array = image.as_array()
 
         # warning: ROI images have dtype float32, but should better be uint8
@@ -35,4 +36,4 @@ class QualityMetrics(object):
         dt_string = datetime.now().strftime("%Y%m%d-%H%M%S")
         tb_summary_writer = tensorboardX.SummaryWriter(f'runs/exp-{dt_string}')
         self.callback = ImageQualityCallback(reference_image, 
-            tb_summary_writer, roi_mask_dict = masks, metrics_dict = metrics_dict, statistics_dict = statistics_dict)
+            tb_summary_writer, roi_mask_dict = roi_mask_dict, metrics_dict = metrics_dict, statistics_dict = statistics_dict)
