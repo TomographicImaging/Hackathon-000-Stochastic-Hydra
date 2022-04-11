@@ -26,6 +26,7 @@ sys.path.append(cil_path)
 
 from sirf.Utilities import examples_data_path
 
+
 class Dataset(object):
     def __init__(self,cfg):
         self.cfg=cfg
@@ -46,10 +47,31 @@ class Dataset(object):
                 'template_sinogram.hs'))            
             acq_model.set_up(data_template, gt)
             self.acq_data = acq_model.forward(gt)
-            self.multiplicative_factor = self.acq_data.clone().fill(1.0)
-            self.additive_factor = self.acq_data.clone()
-            self.additive_factor.fill(0.01)
-            self.groundtruth = gt                                                       
+            self.multiplicative_factors = self.acq_data.clone().fill(1.0)
+            self.additive_factors = self.acq_data.clone()
+            self.additive_factors.fill(0.01)
+            self.reference_image = gt                                                       
             self.image_template = self.groundtruth.clone().fill(1.0)
+            self.warm_start_image = None
+
+            # Create ROIs
+            # threshold the numpy array behind the image
+            image_array = self.reference_image.as_array()
+
+            # warning: ROI images have dtype float32, but should better be uint8
+            # lesion ROI
+            roi1_image = self.reference_image.copy()
+            roi1_image.fill(image_array > (0.4*image_array.max()))
+
+            # dilated lesion ROI
+            roi2_image = self.reference_image.copy()
+            roi2_image.fill(binary_dilation(roi1_image.as_array()))
+
+            # "everthing but the background" ROI
+            roi3_image = self.reference_image.copy()
+            roi3_image.fill(image_array > (0.05*image_array.max()))
+            
+            self.roi_mask_dict = {'roi1':roi1_image,'roi2':roi2_image,'roi3':roi3_image}
+
                                     
             

@@ -23,10 +23,14 @@ from cil.plugins.ccpi_regularisation.functions import FGP_TV
 cil_path = '/home/jovyan/Hackathon-000-Stochastic-Algorithms/cil/'
 sys.path.append(cil_path)
 
-class AcquisitionModel(object):
+class AcquisitionModelFactory(object):
     def __init__(self,cfg):
         self.cfg=cfg
+
+    def __call__(self):
         
         if self.cfg.modality.acq_model.num_subsets == 1:
-            self.acquisition_model = pet.AcquisitionModelUsingRayTracingMatrix()
-            self.acquisition_model.set_num_tangential_LORs(self.cfg.modality.acq_model.LOR)
+            acquisition_model = pet.AcquisitionModelUsingRayTracingMatrix()
+            acquisition_model.set_num_tangential_LORs(self.cfg.modality.acq_model.LOR)
+
+        return acquisition_model

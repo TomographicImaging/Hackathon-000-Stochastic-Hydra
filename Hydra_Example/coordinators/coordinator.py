@@ -11,6 +11,7 @@ from numbers import Number
 import warnings
 
 import sirf.STIR as pet
+from src.Factories import QualityMetricsFactory
 pet.set_verbosity(0)
 import sirf.Reg as reg
 from cil.framework import BlockDataContainer, ImageGeometry, BlockGeometry
@@ -20,6 +21,7 @@ from cil.optimisation.functions import \
 from cil.optimisation.operators import \
     CompositionOperator, BlockOperator, LinearOperator, GradientOperator, ScaledOperator
 from cil.plugins.ccpi_regularisation.functions import FGP_TV
+from scipy.ndimage import binary_dilation
 
 
 cil_path = '/home/jovyan/Hackathon-000-Stochastic-Algorithms/cil/'
@@ -28,22 +30,15 @@ sys.path.append(cil_path)
 source_path = '/home/jovyan/Hackathon-000-Stochastic-Hydra/Hydra_Example/src/'
 sys.path.append(source_path)
 
-print(sys.path)
+
 
 from Classes.Dataset import Dataset
-from Classes.AcquisitionModel import AcquisitionModel
-from Classes.Prior import Prior
 from Classes.QualityMetrics import QualityMetrics
-from Factories.DataFitFactory import DataFitFactory
+from Factories.AcquisitionModelFactory import AcquisitionModelFactory
+from Factories.PriorFactory import PriorFactory
+from Factories.DatafitFactory import DatafitFactory
 from Factories.AlgorithmFactory import AlgorithmFactory
-
-# utils_path = '/home/jovyan/Hackathon/Hackathon-000-Stochastic-Hydra/Hydra_Example/src/utils.py'
-# runpy.run_path(utils_path)
-# import utils
-# from utils import set_up_acquisition_model_with_data
-def set_up_acquisition_model_with_data(acquisition_model, dataset):
-    # acquisition_model.set_acquisition_sensitivity(dataset.multiplicative_factor)
-    acquisition_model.set_up(dataset.acq_data, dataset.image_template)  
+from utils import set_up_acquisition_model_with_data
 
 import subprocess
 
@@ -59,28 +54,32 @@ except Exception: # this command not being found can raise quite a few different
 def main(cfg: DictConfig) -> None:
     print(OmegaConf.to_yaml(cfg))
 
-
     # l object = r class(init: cfg)
     dataset = Dataset(cfg)
-    acquisition_model = AcquisitionModel(cfg).acquisition_model
-    # warm_start_image = WarmStartImage(cfg)
-    # ground_truth = GroundTruth(cfg)
-    prior = Prior(cfg)
-    
+    # dataset must contain: acq data, mutl and add, warm start, ref image, roi mask dictionary
+
     # l object (pointing to classes) = r factory for classes
-    datafitfactory = DataFitFactory(cfg)
-    algorithmfactory = AlgorithmFactory(cfg)
-    #qualitymetricsfactory = QualityMetricsFactory(cfg)
+    acquisition_model_factory = AcquisitionModelFactory(cfg)
+    prior_factory = PriorFactory(cfg)
+    datafit_factory = DatafitFactory(cfg)
+    algorithm_factory = AlgorithmFactory(cfg)
+    quality_metrics_factory = QualityMetricsFactory(cfg)
+
     
-    
+    acquisition_model = acquisition_model_factory()
     set_up_acquisition_model_with_data(acquisition_model, dataset)
-    datafitfactory.set_up_data_fit(dataset,acquisition_model)
-    quality_metrics = QualityMetrics(cfg,reference_image=dataset.groundtruth)
-    # algorithm = algorithmfactory(dataset, datafit, prior, acquisition_model, quality_metrics, warm_start_image)
-    algorithmfactory.set_up_algorithm(dataset, datafitfactory, prior, acquisition_model, quality_metrics=quality_metrics, warm_start_image=None)
+    prior = prior_factory()
+    datafit = datafit_factory(dataset)
+    quality_metrics = quality_metrics_factory(dataset)
+    algorithm = algorithm_factory(dataset, datafit, prior, acquisition_model)
     
-    algorithmfactory.algorithm.run(10,callback=quality_metrics.callback.eval)
+    algorithm.run(10, callback=quality_metrics.eval)
+
+    where_to_save = "../results"
+    algorithm.solution.write('{}/{}'.format(where_to_save,'solution'))
+    np.save('{}/{}'.format(where_to_save,'objective'),algorithm.objective)
 
 
 if __name__ == "__main__":
     main()
+

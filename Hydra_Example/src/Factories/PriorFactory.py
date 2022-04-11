@@ -27,6 +27,9 @@ sys.path.append(cil_path)
 class Prior(object):
     def __init__(self,cfg):
         self.cfg=cfg
+
+    def __call__(self):
     
         if self.cfg.modality.functionals.prior.name == "NonNeg":
-                self.prior = IndicatorBox(lower=0)
+                prior = IndicatorBox(lower=0)
+                return prior
