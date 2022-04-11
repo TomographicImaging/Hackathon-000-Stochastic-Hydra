@@ -33,11 +33,11 @@ sys.path.append(source_path)
 
 
 from Classes.Dataset import Dataset
-from Classes.QualityMetrics import QualityMetrics
 from Factories.AcquisitionModelFactory import AcquisitionModelFactory
 from Factories.PriorFactory import PriorFactory
 from Factories.DatafitFactory import DatafitFactory
 from Factories.AlgorithmFactory import AlgorithmFactory
+from Factories.QualityMetricsFactory import QualityMetricsFactory
 from utils import set_up_acquisition_model_with_data
 
 import subprocess
