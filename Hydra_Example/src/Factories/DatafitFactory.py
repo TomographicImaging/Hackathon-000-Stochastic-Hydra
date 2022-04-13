@@ -23,13 +23,13 @@ from cil.plugins.ccpi_regularisation.functions import FGP_TV
 cil_path = '/home/jovyan/Hackathon-000-Stochastic-Algorithms/cil/'
 sys.path.append(cil_path)
 
-class DataFitFactory(object):
+class DatafitFactory(object):
     def __init__(self,cfg):
         self.cfg=cfg
                 
     def __call__(self,dataset,acquisition_model):
         if self.cfg.modality.acq_model.num_subsets == 1 and self.cfg.modality.functionals.datafit.KL:
-            f = KullbackLeibler(b=dataset.acq_data, eta=dataset.additive_factors)
+            f = KullbackLeibler(b=dataset.acquisition_data, eta=dataset.additive_factors)
             return OperatorCompositionFunction(f,acquisition_model)
             
             

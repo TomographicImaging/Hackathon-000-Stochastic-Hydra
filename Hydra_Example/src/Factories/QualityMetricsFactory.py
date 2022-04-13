@@ -2,15 +2,15 @@ import sys
 import numpy as np
 import cil
 import tensorboardX
-from scipy.ndimage import binary_dilation
 from datetime import datetime
 
 quality_metrics_path = '/home/jovyan/Hackathon-000-Stochastic-QualityMetrics/'
 sys.path.append(quality_metrics_path)
+import ImageQualityCallback
 from ImageQualityCallback import MSE, MAE, PSNR, ImageQualityCallback
 
 
-class QualityMetrics(object):
+class QualityMetricsFactory(object):
     def __init__(self, cfg):
         self.cfg = cfg
         self.metrics_dict = {'MSE':MSE, 'MAE':MAE, 'PSNR':PSNR}

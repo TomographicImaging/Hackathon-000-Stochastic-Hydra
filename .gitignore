@@ -2,3 +2,6 @@
 **/*.s
 **/.ipynb_checkpoints/*
 **/__pycache__/*
+Hydra_Example/results/*
+Hydra_Example/coordinators/pet/GD/runs/**
+**/.hydra/*

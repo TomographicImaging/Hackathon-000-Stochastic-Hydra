@@ -24,7 +24,7 @@ from cil.plugins.ccpi_regularisation.functions import FGP_TV
 cil_path = '/home/jovyan/Hackathon-000-Stochastic-Algorithms/cil/'
 sys.path.append(cil_path)
 
-class Prior(object):
+class PriorFactory(object):
     def __init__(self,cfg):
         self.cfg=cfg
 

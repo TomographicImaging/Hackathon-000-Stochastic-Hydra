@@ -11,7 +11,6 @@ from numbers import Number
 import warnings
 
 import sirf.STIR as pet
-from src.Factories import QualityMetricsFactory
 pet.set_verbosity(0)
 import sirf.Reg as reg
 from cil.framework import BlockDataContainer, ImageGeometry, BlockGeometry
@@ -69,13 +68,13 @@ def main(cfg: DictConfig) -> None:
     acquisition_model = acquisition_model_factory()
     set_up_acquisition_model_with_data(acquisition_model, dataset)
     prior = prior_factory()
-    datafit = datafit_factory(dataset)
+    datafit = datafit_factory(dataset,acquisition_model)
     quality_metrics = quality_metrics_factory(dataset)
     algorithm = algorithm_factory(dataset, datafit, prior, acquisition_model)
     
     algorithm.run(10, callback=quality_metrics.eval)
 
-    where_to_save = "../results"
+    where_to_save = "/home/jovyan/Hackathon-000-Stochastic-Hydra/Hydra_Example/results"
     algorithm.solution.write('{}/{}'.format(where_to_save,'solution'))
     np.save('{}/{}'.format(where_to_save,'objective'),algorithm.objective)
 

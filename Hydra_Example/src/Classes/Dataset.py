@@ -20,6 +20,8 @@ from cil.optimisation.operators import \
     CompositionOperator, BlockOperator, LinearOperator, GradientOperator, ScaledOperator
 from cil.plugins.ccpi_regularisation.functions import FGP_TV
 
+from scipy.ndimage import binary_dilation
+
 
 cil_path = '/home/jovyan/Hackathon-000-Stochastic-Algorithms/cil/'
 sys.path.append(cil_path)
@@ -46,12 +48,13 @@ class Dataset(object):
                 'thorax_single_slice',
                 'template_sinogram.hs'))            
             acq_model.set_up(data_template, gt)
-            self.acq_data = acq_model.forward(gt)
-            self.multiplicative_factors = self.acq_data.clone().fill(1.0)
-            self.additive_factors = self.acq_data.clone()
+            self.acquisition_data = acq_model.forward(gt)
+            multiplicative_factors = self.acquisition_data.clone().fill(1.0)
+            self.multiplicative_factors = pet.AcquisitionSensitivityModel(multiplicative_factors)
+            self.additive_factors = self.acquisition_data.clone()
             self.additive_factors.fill(0.01)
             self.reference_image = gt                                                       
-            self.image_template = self.groundtruth.clone().fill(1.0)
+            self.image_template = gt.clone().fill(1.0)
             self.warm_start_image = None
 
             # Create ROIs
