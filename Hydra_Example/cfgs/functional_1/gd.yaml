@@ -1,3 +1,0 @@
-name: dataset_test
-_target_: src.functional_1.gd.gd
-
