@@ -37,7 +37,6 @@ from Factories.PriorFactory import PriorFactory
 from Factories.DatafitFactory import DatafitFactory
 from Factories.AlgorithmFactory import AlgorithmFactory
 from Factories.QualityMetricsFactory import QualityMetricsFactory
-from utils import set_up_acquisition_model_with_data
 
 import subprocess
 
@@ -64,15 +63,13 @@ def main(cfg: DictConfig) -> None:
     algorithm_factory = AlgorithmFactory(cfg)
     quality_metrics_factory = QualityMetricsFactory(cfg)
 
-    
-    acquisition_model = acquisition_model_factory()
-    set_up_acquisition_model_with_data(acquisition_model, dataset)
+    acquisition_model, masks = acquisition_model_factory(dataset)
     prior = prior_factory()
-    datafit = datafit_factory(dataset,acquisition_model)
+    datafit = datafit_factory(dataset,acquisition_model,masks)
     quality_metrics = quality_metrics_factory(dataset)
-    algorithm = algorithm_factory(dataset, datafit, prior, acquisition_model)
+    algorithm, num_iterations = algorithm_factory(dataset, datafit, prior, acquisition_model)
     
-    algorithm.run(10, callback=quality_metrics.eval)
+    algorithm.run(num_iterations, callback=quality_metrics.eval)
 
     where_to_save = "/home/jovyan/Hackathon-000-Stochastic-Hydra/Hydra_Example/results"
     algorithm.solution.write('{}/{}'.format(where_to_save,'solution'))

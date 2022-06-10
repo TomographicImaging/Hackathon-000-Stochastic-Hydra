@@ -27,10 +27,38 @@ class AcquisitionModelFactory(object):
     def __init__(self,cfg):
         self.cfg=cfg
 
-    def __call__(self):
-        
-        if self.cfg.modality.acq_model.num_subsets == 1:
-            acquisition_model = pet.AcquisitionModelUsingRayTracingMatrix()
-            acquisition_model.set_num_tangential_LORs(self.cfg.modality.acq_model.LOR)
 
-        return acquisition_model
+    def __call__(self,dataset):
+        
+        # number of subsets
+        num_subsets = self.cfg.modality.acq_model.num_subsets
+        # create acquisition models
+        acq_models = [pet.AcquisitionModelUsingRayTracingMatrix() for k in range(num_subsets)]
+        # create masks
+        im_one = dataset.image_template.clone()
+        im_one.fill(1.)
+        masks = []
+
+        # Loop over physical subsets
+        for k in range(num_subsets):
+            # Set up
+            acq_models[k].set_num_tangential_LORs(self.cfg.modality.acq_model.LOR)
+            acq_models[k].set_acquisition_sensitivity(dataset.multiplicative_factors)
+            acq_models[k].set_up(dataset.acquisition_data, dataset.image_template)    
+            acq_models[k].num_subsets = num_subsets
+            acq_models[k].subset_num = k 
+
+            # compute masks 
+            mask = acq_models[k].direct(im_one)
+            masks.append(mask)
+        
+        return BlockOperator(*acq_models), masks
+            
+# 
+#     def __call__(self):
+        
+#         if self.cfg.modality.acq_model.num_subsets == 1:
+#             acquisition_model = pet.AcquisitionModelUsingRayTracingMatrix()
+#             acquisition_model.set_num_tangential_LORs(self.cfg.modality.acq_model.LOR)
+
+#         return acquisition_model

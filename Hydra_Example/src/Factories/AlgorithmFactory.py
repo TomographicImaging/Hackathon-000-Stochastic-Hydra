@@ -26,16 +26,81 @@ cil_path = '/home/jovyan/Hackathon-000-Stochastic-Algorithms/cil/'
 sys.path.append(cil_path)
 from NewFISTA import ISTA, FISTA
 
+source_path = '/home/jovyan/Hackathon-000-Stochastic-Hydra/Hydra_Example/src/'
+sys.path.append(source_path)
+from utils import get_tau, get_sigmas
+
 class AlgorithmFactory(object):
     def __init__(self,cfg):
         self.cfg=cfg        
                 
     def __call__(self, dataset, datafit, prior, acquisition_model):
-        if self.cfg.modality.acq_model.num_subsets == 1 and self.cfg.modality.algorithm.name == "GD":
-            initial = dataset.image_template.get_uniform_copy(0)
+        
+        initial = dataset.image_template.get_uniform_copy(0)
+        
+        if self.cfg.modality.algorithm.name == "GD":
+            
             step_size = self.cfg.modality.algorithm.stepsize
-            return ISTA(initial=initial, f=datafit, g=prior,
-                step_size=step_size, max_iteration=1e10,check_convergence_criterion=False)
+            num_iterations = self.cfg.modality.algorithm.num_epochs
+            
+            return ISTA(
+                    initial=initial, 
+                    f=datafit, 
+                    g=prior,
+                    step_size=step_size, 
+                    max_iteration=1e10,
+                    check_convergence_criterion=False), num_iterations
+        
+        elif self.cfg.modality.algorithm.name == "SPDHG":
+            
+            # primal-dual balance
+            gamma = self.cfg.modality.algorithm.hyperparameters.primal_dual_balance
+            
+            # number of subsets
+            num_subsets = self.cfg.modality.acq_model.num_subsets
+            
+            # probabilities and number of iterations
+            if self.cfg.modality.algorithm.sampling == "uniform":
+                prob = [1/num_subsets] * num_subsets
+                num_iterations = self.cfg.modality.algorithm.num_epochs * num_subsets
+            
+            if self.cfg.modality.algorithm.preconditioning:
+                
+                # compute preconditioned step-sizes
+                tau = 1/gamma * get_tau(acquisition_model, prob)
+                sigma = gamma * get_sigmas(acquisition_model)
+                
+                return SPDHG(            
+                        f=datafit, 
+                        g=prior, 
+                        operator=acquisition_model,
+                        tau=tau,
+                        sigma=sigma,
+                        prob=prob,
+                        initial=initial,
+                        max_iteration=1e10,         
+                        update_objective_interval=1,
+                        use_axpby=False
+                        ), num_iterations
+            else:
+                
+                # should automatically set-up scalar tau and sigmas
+                # by computing the norms of the partial operators
+                
+                    return SPDHG(            
+                        f=datafit, 
+                        g=prior, 
+                        operator=acquisition_model,
+                        tau=None,
+                        sigma=None,
+                        gamma=gamma,
+                        prob=prob,
+                        initial=initial,
+                        norms=None,
+                        max_iteration=1e10,         
+                        update_objective_interval=1,
+                        use_axpby=False
+                        ), num_iterations
             
 
         
