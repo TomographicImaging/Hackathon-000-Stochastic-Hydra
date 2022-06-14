@@ -32,6 +32,16 @@ from sirf.Utilities import examples_data_path
 class Dataset(object):
     def __init__(self,cfg):
         self.cfg=cfg
+
+        if cfg.modality.dataset.name == 'folder':
+            folder = cfg.modality.dataset.path
+            self.reference_image = pet.ImageData('{}/reference_image.hv'.format(folder))
+            self.acquisition_data = pet.AcquisitionData('{}/acquisition_data.hs'.format(folder))
+            mf = pet.AcquisitionData('{}/multiplicative_factors.hs'.format(folder))
+            self.multiplicative_factors = pet.AcquisitionSensitivityModel(mf)
+            self.additive_factors = pet.AcquisitionData('{}/additive_factors'.format(folder))
+
+
         
         if cfg.modality.dataset.name == 'test':
             gt = pet.ImageData('{}/{}/{}'.format(
