@@ -1,0 +1,9 @@
+hydra: 
+  run:
+    dir: ${modality.name}/${modality.algorithm.name}
+  sweep:
+    dir: ${modality.name}/${modality.algorithm.name}
+
+defaults:
+  - modality: pet
+  - override hydra/launcher: submitit_slurm

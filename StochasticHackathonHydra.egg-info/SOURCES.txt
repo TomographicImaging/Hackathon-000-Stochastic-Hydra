@@ -1,0 +1,9 @@
+LICENSE
+README.md
+setup.py
+StochasticHackathonHydra.egg-info/PKG-INFO
+StochasticHackathonHydra.egg-info/SOURCES.txt
+StochasticHackathonHydra.egg-info/dependency_links.txt
+StochasticHackathonHydra.egg-info/top_level.txt
+hydrasrc/__init__.py
+hydrasrc/utils.py
