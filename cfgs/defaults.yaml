@@ -1,9 +1,28 @@
+
+
+
 hydra: 
   run:
-    dir: ${modality.name}/${modality.algorithm.name}
+    dir: ${dataset.modality}/${dataset.name}
   sweep:
-    dir: ${modality.name}/${modality.algorithm.name}
+    dir: ${dataset.modality}/${dataset.name}
+
 
 defaults:
-  - modality: pet
+  # Specify the dataset and in turn this specifies the modality
+  - dataset: test
+  # Specify the quality metrics but I guess this could be explicitly set within the dataset...
+  - dataset/quality_metrics: pet
+  # These have to be separate outside the scope of dataset as will specifiy specific properties 
+  # i.e. extra hyper-parameters or paths to precomputed images
+  - dataset/preconditioning: none
+  - dataset/warm_start: none
+  # The is meat and potatoes specifying the algorthim with all neccessary properties/hyperparameters
+  - algorithm: SPDHG
+  # This needs to be outside the scope of deterministic as there are extra properties
+  - algorithm/subset_sampling: deterministic
+  # Due to the PD balancing step size have to find a way of ensuring that only works for PD
+  - algorithm/step_size: constant
+  # should only pick priors appropriately for the modality, not dumb-proofed at present...
+  - algorithm/prior: non_negativity
   - override hydra/launcher: submitit_slurm

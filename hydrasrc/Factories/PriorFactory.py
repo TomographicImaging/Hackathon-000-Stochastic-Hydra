@@ -26,10 +26,16 @@ sys.path.append(cil_path)
 
 class PriorFactory(object):
     def __init__(self,cfg):
-        self.cfg=cfg
+        if cfg.algorithm.prior.name == "no_prior":
+            self.prior = self.no_prior()
+        if cfg.algorithm.prior.name == "non_negativity":
+            self.prior = self.non_negativity()
 
     def __call__(self):
-    
-        if self.cfg.modality.functionals.prior.name == "NonNeg":
-                prior = IndicatorBox(lower=0)
-                return prior
+        return self.prior
+
+    def no_prior(self):
+        return 
+
+    def non_negativity(self):
+        return IndicatorBox(lower=0)

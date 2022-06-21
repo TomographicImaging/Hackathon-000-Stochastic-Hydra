@@ -1,0 +1,18 @@
+modality: PET
+name: 2D_test
+data:
+  prompts: /home/vol04/scarf1124/test_dataset/prompts.hs
+  additive: /home/vol04/scarf1124/test_dataset/additive.hs
+  multiplicative: /home/vol04/scarf1124/test_dataset/multiplicative.hs
+  reference: /home/vol04/scarf1124/test_dataset/reference.hv
+ROI1:
+  name: lesion
+  path: /home/vol04/scarf1124/test_dataset/ROI1.hv
+ROI2:
+  name: dilated_lesion
+  path: /home/vol04/scarf1124/test_dataset/ROI2.hv
+ROI3: 
+  name: no_background
+  path: /home/vol04/scarf1124/test_dataset/ROI3.hv
+modelling:
+  LOR: 10

@@ -1,0 +1,3 @@
+name: "ISTA_GD"
+parameters:
+  num_subsets: 10

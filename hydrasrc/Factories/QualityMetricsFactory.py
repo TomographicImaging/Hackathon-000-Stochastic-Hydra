@@ -1,13 +1,7 @@
-import sys
-import numpy as np
-import cil
-import tensorboardX
-from datetime import datetime
-
-quality_metrics_path = '/home/vol04/scarf1124/Hackathon-000-Stochastic-QualityMetrics/'
-sys.path.append(quality_metrics_path)
+import sirf.STIR as pet
 import ImageQualityCallback
 from ImageQualityCallback import MSE, MAE, PSNR, ImageQualityCallback
+import datatime
 
 
 class QualityMetricsFactory(object):

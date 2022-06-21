@@ -1,0 +1,5 @@
+name: "SPDHG"
+parameters:
+  epochs: 10
+  num_subsets: 10
+  pd_balance: 1

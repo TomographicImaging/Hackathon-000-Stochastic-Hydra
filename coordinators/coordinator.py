@@ -18,7 +18,6 @@ from hydrasrc.Factories.QualityMetricsFactory import QualityMetricsFactory
 @hydra.main(config_path="../cfgs", config_name="defaults")
 def main(cfg: DictConfig) -> None:
     print(OmegaConf.to_yaml(cfg))
-
     # l object = r class(init: cfg)
     dataset = Dataset(cfg)
     # dataset must contain: acq data, mutl and add, warm start, ref image, roi mask dictionary
@@ -30,11 +29,8 @@ def main(cfg: DictConfig) -> None:
     algorithm_class = AlgorithmFactory(cfg)
     quality_metrics_class = QualityMetricsFactory(cfg)
 
-    # Create the acquisition model off the dataset
     acquisition_model, masks = acquisition_model_class(dataset)
-    # Instantiate prior class
     prior = prior_class()
-
     datafit = datafit_class(dataset,acquisition_model,masks)
     quality_metrics = quality_metrics_class(dataset)
     algorithm, num_iterations = algorithm_class(dataset, datafit, prior, acquisition_model)
