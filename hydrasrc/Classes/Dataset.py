@@ -35,10 +35,9 @@ class Dataset(object):
             self.multiplicative_factors = pet.AcquisitionSensitivityModel(mf)
             self.additive_factors = pet.AcquisitionData(cfg.dataset.data.additive)
             self.roi_mask_dict = {}
-            """ for i in range(10):
+            for i in range(10):
                 if 'ROI{}'.format(i) in cfg.dataset.keys():
                     self.roi_mask_dict[cfg.dataset['ROI{}'.format(i)].name]  = pet.ImageData(cfg.dataset['ROI{}'.format(i)].path)
-            print(self.roi_mask_dict) """
         else:
             raise NotImplementedError
 

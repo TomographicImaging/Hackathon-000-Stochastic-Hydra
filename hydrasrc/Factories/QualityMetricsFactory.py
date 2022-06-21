@@ -1,7 +1,8 @@
 import sirf.STIR as pet
 import ImageQualityCallback
 from ImageQualityCallback import MSE, MAE, PSNR, ImageQualityCallback
-import datatime
+from datetime import datetime
+import tensorboardX
 
 
 class QualityMetricsFactory(object):
@@ -11,7 +12,7 @@ class QualityMetricsFactory(object):
         self.statistics_dict = {'MEAN': (lambda x: x.mean()),
                                     'STDDEV': (lambda x: x.std())}
         dt_string = datetime.now().strftime("%Y%m%d-%H%M%S")
-        self.tb_summary_writer = tensorboardX.SummaryWriter(f'runs/exp-{dt_string}')
+        self.tb_summary_writer = tensorboardX.SummaryWriter(f'exp-{dt_string}')
 
     def __call__(self, dataset):
 
