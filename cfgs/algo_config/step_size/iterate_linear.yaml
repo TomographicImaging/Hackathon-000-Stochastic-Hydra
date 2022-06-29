@@ -1,0 +1,4 @@
+name: 'iterate_linear'
+gamma: 
+alpha: 
+# step_size = gamma/(1+iterate.alpha)

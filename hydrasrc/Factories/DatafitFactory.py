@@ -17,8 +17,8 @@ class DatafitFactory(object):
 
 class PETDatafit(object):
     def __init__(self,cfg):
-        self.algorithm = cfg.algorithm.name
-        self.num_subsets = cfg.algorithm.parameters.num_subsets
+        self.algorithm = cfg.algo_config.name
+        self.num_subsets = cfg.algo_config.parameters.num_subsets
 
     def __call__(self,dataset,acquisition_model,masks):
                 

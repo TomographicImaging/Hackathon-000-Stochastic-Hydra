@@ -29,6 +29,7 @@ def main(cfg: DictConfig) -> None:
     algorithm_class = AlgorithmFactory(cfg)
     quality_metrics_class = QualityMetricsFactory(cfg)
 
+    # Want to get to the point of no MASKS
     acquisition_model, masks = acquisition_model_class(dataset)
     prior = prior_class()
     datafit = datafit_class(dataset,acquisition_model,masks)

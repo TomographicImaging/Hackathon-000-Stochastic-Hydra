@@ -5,3 +5,4 @@
 Hydra_Example/results/*
 Hydra_Example/coordinators/PET/*
 **/.hydra/*
+**/*.egg-info

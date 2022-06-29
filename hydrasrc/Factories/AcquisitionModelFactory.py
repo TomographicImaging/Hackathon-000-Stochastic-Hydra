@@ -16,7 +16,7 @@ class AcquisitionModelFactory(object):
 
 class PETAcquisitionModel(object):
     def __init__(self, cfg):
-        self.num_subsets = cfg.algorithm.parameters.num_subsets
+        self.num_subsets = cfg.algo_config.parameters.num_subsets
         self.LOR = cfg.dataset.modelling.LOR
 
     def get_acquisition_model(self, dataset):
@@ -27,7 +27,7 @@ class PETAcquisitionModel(object):
         else:
             raise NotImplementedError
 
-    # THIS CAN BE ABSTRACTED OUT!
+    # NEEDS TO BE DONE WITHOUT MASKS
     def subset_acquisition_model(self, dataset, num_subsets, LOR):
         # create acquisition models
         acq_models = [pet.AcquisitionModelUsingRayTracingMatrix() for k in range(num_subsets)]

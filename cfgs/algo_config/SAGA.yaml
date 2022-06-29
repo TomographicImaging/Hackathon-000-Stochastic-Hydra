@@ -1,5 +1,5 @@
-name: "ISTA_SAGA"
+name: "SAGA"
 parameters:
-  step_size: 0.1
+  step_size: 1
   num_subsets: 5
   num_epochs: 10

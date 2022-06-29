@@ -8,7 +8,7 @@ defaults:
   - dataset/preconditioning: none
   - dataset/warm_start: none
   # The is meat and potatoes specifying the algorthim with all neccessary properties/hyperparameters
-  - algorithm: ISTA_SAGA
+  - algorithm: SAGA
   # This needs to be outside the scope of deterministic as there are extra properties
   - algorithm/subset_sampling: uniform
   # Due to the PD balancing step size have to find a way of ensuring that only works for PD
