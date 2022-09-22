@@ -1,5 +1,0 @@
-name: "SAGA"
-parameters:
-  step_size: 1
-  num_subsets: 5
-  num_epochs: 10

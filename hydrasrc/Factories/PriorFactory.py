@@ -26,11 +26,11 @@ sys.path.append(cil_path)
 
 class PriorFactory(object):
     def __init__(self,cfg):
-        if cfg.algo_config.prior.name == "no_prior":
+        if cfg.name == "none":
             self.prior = self.no_prior()
-        if cfg.algo_config.prior.name == "non_negativity":
+        if cfg.name == "non_negativity":
             self.prior = self.non_negativity()
-        if cfg.algo_config.prior.name == "quadratic_prior":
+        if cfg.name == "quadratic_prior":
             self.prior = self.non_negativity()
 
     def __call__(self):

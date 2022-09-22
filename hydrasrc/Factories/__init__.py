@@ -1,5 +1,13 @@
 from .AcquisitionModelFactory import AcquisitionModelFactory
 from .AlgorithmFactory import AlgorithmFactory
+from .AlgorithmConfigurationFactory import AlgorithmConfigurationFactory
 from .DatafitFactory import DatafitFactory
 from .PriorFactory import PriorFactory
 from .QualityMetricsFactory import QualityMetricsFactory
+
+
+from .PreconditionerFactory import PreconditionerFactory
+from .StepSizeFactory import StepSizeFactory
+from .SubsetSamplingFactory import SubsetSamplingFactory
+from .SubsetGradientFactory import SubsetGradientFactory
+from .WarmStartFactory import WarmStartFactory

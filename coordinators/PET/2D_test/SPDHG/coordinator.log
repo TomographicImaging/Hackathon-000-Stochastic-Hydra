@@ -1,4 +1,0 @@
-[2022-06-29 16:51:17,728][root][INFO] - SPDHG setting up
-[2022-06-29 16:51:27,043][root][INFO] - SPDHG configured
-[2022-06-29 16:51:28,398][root][WARNING] - NaN or Inf found in input tensor.
-[2022-06-29 16:51:29,786][root][WARNING] - NaN or Inf found in input tensor.

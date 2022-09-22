@@ -10,15 +10,15 @@ from ..utils import get_tau, get_sigmas
 
 class AlgorithmFactory(object):
     def __init__(self,cfg):
-        if cfg.algo_config.name == 'SPDHG':
+        if cfg.name == 'SPDHG':
             algorithm = SPDHGAlgorithm(cfg)
-        elif cfg.algo_config.name == 'SAGA':
+        elif cfg.name == 'ISTA':
             algorithm = ISTAAlgorithm(cfg)
-        elif cfg.algo_config.name == 'asd':
+        elif cfg.name == 'asd':
             raise NotImplementedError
-        elif cfg.algo_config.name == 'as':
+        elif cfg.name == 'as':
             raise NotImplementedError
-        elif cfg.algo_config.name == 'das':
+        elif cfg.name == 'das':
             raise NotImplementedError
         else:
             raise NotImplementedError
@@ -34,14 +34,14 @@ class AlgorithmFactory(object):
 
 class SPDHGAlgorithm(object):
     def __init__(self,cfg):
-        self.primal_dual_balance = cfg.algo_config.parameters.primal_dual_balance
-        self.num_subsets = cfg.algo_config.parameters.num_subsets
+        self.primal_dual_balance = cfg.parameters.primal_dual_balance
+        self.num_subsets = cfg.parameters.num_subsets
         self.preconditioning = False
         
-        if cfg.algo_config.subset_sampling.name == "uniform":
+        if cfg.subset_sampling.name == "uniform":
             self.subset_probability = [1/self.num_subsets] * self.num_subsets
-            self.num_iterations = cfg.algo_config.parameters.num_epochs * self.num_subsets
-        elif cfg.algo_config.name == 'a':
+            self.num_iterations = cfg.parameters.num_epochs * self.num_subsets
+        elif cfg.name == 'a':
             raise NotImplementedError
         else:
             raise NotImplementedError
@@ -86,33 +86,25 @@ class SPDHGAlgorithm(object):
                     use_axpby=False
                     ), self.num_iterations
 
-class MLEMPreconditioner:
-    def __init__(self,cfg_preconditioning):
-        cfg.algo_config
 
-cst = A.adjoint(A.range.allocate(1.))
-cst2 = ig.allocate(1.).divide(cst)
-precond = lambda i, x: cst2
 
 class ISTAAlgorithm(object):
     def __init__(self,cfg):
-        self.step_size = cfg.algo_config.parameters.step_size
-        self.num_subsets = cfg.algo_config.parameters.num_subsets
-        
-        if cfg.algo_config.name == 'SAGA':
-            self.num_iterations = cfg.algo_config.parameters.num_epochs * self.num_subsets
-            self.F = SAGAFunction
-        elif cfg.algo_config.name == 'a':
-            raise NotImplementedError
-        else:
-            raise NotImplementedError
+        self.num_subsets = cfg.parameters.num_subsets
 
-    def __call__(self, dataset, datafit, prior, acquisition_model):
+    def __call__(self, dataset, datafit, prior, acquisition_model,
+                                preconditioner,
+                                step_size,
+                                subset_gradient,
+                                warm_start):
+        if self.preconditioner_name == 'MLEM':
+            self.preconditioner.compute_total_sensitivities(dataset, acquisition_model)
+        
         return ISTA(
                 initial = dataset.reference_image.get_uniform_copy(0),  
-                f=self.F(datafit),
+                f=subset_gradient(datafit,precond=self.preconditioner()),
                 g=prior, 
-                step_size=self.step_size,
+                step_size=step_size,
                 update_objective_interval=self.num_subsets,
                 max_iteration=1e10, 
                 check_convergence_criterion=False

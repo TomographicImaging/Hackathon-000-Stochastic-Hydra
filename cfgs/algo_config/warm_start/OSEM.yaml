@@ -1,0 +1,3 @@
+name: OSEM
+epochs: 100
+subsets: 10

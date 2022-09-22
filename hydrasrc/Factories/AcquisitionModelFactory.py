@@ -16,7 +16,7 @@ class AcquisitionModelFactory(object):
 
 class PETAcquisitionModel(object):
     def __init__(self, cfg):
-        self.num_subsets = cfg.algo_config.parameters.num_subsets
+        self.num_subsets = cfg.algo_config.subset_gradient.parameters.num_subsets
         self.LOR = cfg.dataset.modelling.LOR
 
     def get_acquisition_model(self, dataset):
@@ -41,6 +41,7 @@ class PETAcquisitionModel(object):
             # Set up
             acq_models[k].set_num_tangential_LORs(LOR)
             acq_models[k].set_acquisition_sensitivity(dataset.multiplicative_factors)
+            acq_models[k].set_matrix(acq_models[k].get_matrix().set_restrict_to_cylindrical_FOV(False))
             acq_models[k].set_up(dataset.acquisition_data, im_one)    
             acq_models[k].num_subsets = num_subsets
             acq_models[k].subset_num = k 

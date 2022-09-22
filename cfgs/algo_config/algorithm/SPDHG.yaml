@@ -1,0 +1,5 @@
+name: SPDHG
+parameters:
+  num_epochs: 10
+  num_subsets: 10
+  primal_dual_balance: 1

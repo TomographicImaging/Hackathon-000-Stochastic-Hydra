@@ -3,6 +3,6 @@
 **/.ipynb_checkpoints/*
 **/__pycache__/*
 Hydra_Example/results/*
-Hydra_Example/coordinators/PET/*
+coordinators/PET/*
 **/.hydra/*
 **/*.egg-info

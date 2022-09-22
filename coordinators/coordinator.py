@@ -8,30 +8,29 @@ pet.AcquisitionData.set_storage_scheme("memory")
 
 import numpy as np
 
-from hydrasrc.Classes.Dataset import Dataset
+from hydrasrc.Classes.DatasetClass import Dataset
 from hydrasrc.Factories.AcquisitionModelFactory import AcquisitionModelFactory
-from hydrasrc.Factories.PriorFactory import PriorFactory
 from hydrasrc.Factories.DatafitFactory import DatafitFactory
-from hydrasrc.Factories.AlgorithmFactory import AlgorithmFactory
+from hydrasrc.Factories.PriorFactory import PriorFactory
+from hydrasrc.Factories.AlgorithmConfigurationFactory import AlgorithmConfigurationFactory
 from hydrasrc.Factories.QualityMetricsFactory import QualityMetricsFactory
 
 @hydra.main(config_path="../cfgs", config_name="defaults")
 def main(cfg: DictConfig) -> None:
     print(OmegaConf.to_yaml(cfg))
     # l object = r class(init: cfg)
-    dataset = Dataset(cfg)
+    dataset = Dataset(cfg.dataset)
     # dataset must contain: acq data, mutl and add, warm start, ref image, roi mask dictionary
 
     # l object (pointing to classes) = r factory for classes
     acquisition_model_class = AcquisitionModelFactory(cfg)
-    prior_class = PriorFactory(cfg)
-    datafit_class = DatafitFactory(cfg)
-    algorithm_class = AlgorithmFactory(cfg)
+    #prior_class = PriorFactory(cfg)
+    algorithm_configuration_class = AlgorithmConfigurationFactory(cfg.algo_config)
     quality_metrics_class = QualityMetricsFactory(cfg)
 
     # Want to get to the point of no MASKS
     acquisition_model, masks = acquisition_model_class(dataset)
-    prior = prior_class()
+    #prior = prior_class()
     datafit = datafit_class(dataset,acquisition_model,masks)
     quality_metrics = quality_metrics_class(dataset)
     algorithm, num_iterations = algorithm_class(dataset, datafit, prior, acquisition_model)

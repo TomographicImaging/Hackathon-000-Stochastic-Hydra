@@ -2,24 +2,26 @@ defaults:
   # Specify the dataset and in turn this specifies the modality
   - dataset: test
   # Specify the quality metrics but I guess this could be explicitly set within the dataset...
-  - dataset/quality_metrics: pet
-  # These have to be separate outside the scope of dataset as will specifiy specific properties 
+  - dataset/quality_metrics: PET
+  # These have to be separate as will specifiy specific properties 
   # i.e. extra hyper-parameters or paths to precomputed images
-  - dataset/preconditioning: none
-  - dataset/warm_start: none
-  # The is meat and potatoes specifying the algorthim with all neccessary properties/hyperparameters
-  - algorithm: SAGA
+  - algo_config/preconditioner: none
+  - algo_config/warm_start: none
+  # Algorithm
+  - algo_config/algorithm: ISTA
+  # subset_gradient
+  - algo_config/subset_gradient: SAGA
   # This needs to be outside the scope of deterministic as there are extra properties
-  - algorithm/subset_sampling: uniform
+  - algo_config/subset_gradient/subset_sampling: uniform
   # Due to the PD balancing step size have to find a way of ensuring that only works for PD
-  - algorithm/step_size: constant
+  - algo_config/step_size: constant
   # should only pick priors appropriately for the modality, not dumb-proofed at present...
-  - algorithm/prior: non_negativity
+  - algo_config/prior: non_negativity
   - override hydra/launcher: submitit_slurm
 
 
 hydra: 
   run:
-    dir: ${dataset.modality}/${dataset.name}/${algorithm.name}
+    dir: test #${dataset.modality}/${dataset.name}/${algo_config.name}
   sweep:
-    dir: ${dataset.modality}/${dataset.name}/${algorithm.name}
+    dir: test #${dataset.modality}/${dataset.name}/${algo_config.name}
